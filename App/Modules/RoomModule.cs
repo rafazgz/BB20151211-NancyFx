@@ -1,4 +1,5 @@
-﻿using App.Models;
+﻿using System.Linq;
+using App.Models;
 using Common.Interfaces;
 using Nancy;
 using Nancy.ModelBinding;
@@ -17,7 +18,7 @@ namespace App.Modules
             {
                 var rooms = Service.GetRooms();
 
-                return Negotiate.WithModel(rooms);
+                return Negotiate.WithModel(rooms.Select(e => e.ViewModel));
             };
 
             Post["/new"] = p =>
@@ -26,7 +27,7 @@ namespace App.Modules
 
                 var room = Service.CreateRoom(model.Name);
 
-                return Negotiate.WithModel(room);
+                return Negotiate.WithModel(room.ViewModel);
             };
         }
     }

@@ -6,6 +6,7 @@ namespace App
     {
         public void Configuration(IAppBuilder app)
         {
+            Common.Setup.AutoMapper.Initialize();
             app.UseNancy();
         }    
     }

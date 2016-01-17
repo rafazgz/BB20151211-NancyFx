@@ -23,7 +23,7 @@ namespace Core.Services
 
         public Room CreateRoom(string name)
         {
-            var room = GetRoomByName(name) ?? new Room {Name = name.ToLower()};
+            var room = GetRoomByName(name) ?? new Room {Name = name};
 
             _context.Rooms.AddOrUpdate(room);
             _context.SaveChanges();
@@ -33,7 +33,7 @@ namespace Core.Services
 
         private Room GetRoomByName(string name)
         {
-            return _context.Rooms.Find(new {name = name.ToLower()});
+            return _context.Rooms.FirstOrDefault(r => r.RawName == name.ToLower());
         }
     }
 }

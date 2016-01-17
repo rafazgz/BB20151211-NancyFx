@@ -11,7 +11,7 @@ namespace Data.Context
 
         public DataContext()
         {
-            Database.SetInitializer(new CreateDatabaseIfNotExists<DataContext>());
+            Database.SetInitializer(new DataInitializer());
         }
     }
 }
