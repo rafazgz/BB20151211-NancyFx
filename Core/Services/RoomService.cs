@@ -23,11 +23,17 @@ namespace Core.Services
 
         public Room CreateRoom(string name)
         {
-            var room = new Room {Name = name};
+            var room = GetRoomByName(name) ?? new Room {Name = name.ToLower()};
+
             _context.Rooms.AddOrUpdate(room);
             _context.SaveChanges();
 
             return room;
+        }
+
+        private Room GetRoomByName(string name)
+        {
+            return _context.Rooms.Find(new {name = name.ToLower()});
         }
     }
 }
