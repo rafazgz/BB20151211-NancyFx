@@ -6,7 +6,7 @@ namespace App.Modules
     {
         public HomeModule()
         {
-            Get["/"] = p => "Hello World!";
+            Get["/"] = p => View["Index"];
         }
     }
 }

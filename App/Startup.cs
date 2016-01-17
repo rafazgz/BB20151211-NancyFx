@@ -1,4 +1,5 @@
-﻿using Owin;
+﻿using Microsoft.Owin.Extensions;
+using Owin;
 
 namespace App
 {
@@ -8,6 +9,7 @@ namespace App
         {
             Common.Setup.AutoMapper.Initialize();
             app.UseNancy();
+            app.UseStageMarker(PipelineStage.MapHandler);
         }    
     }
 }
