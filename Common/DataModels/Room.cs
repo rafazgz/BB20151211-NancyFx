@@ -14,20 +14,18 @@ namespace Common.DataModels
         public long Id { get; set; }
 
         private string _name;
+
         [StringLength(128)]
         public string Name
         {
-            get
-            {
-                return _name;
-            }
+            get { return _name; }
             set
             {
                 _name = value;
                 RawName = value == null ? null : value.ToLower();
             }
         }
-        
+
         [StringLength(128), Index(IsUnique = true)]
         public string RawName { get; private set; }
 

@@ -7,6 +7,12 @@ namespace Common.Interfaces
     {
         IList<Room> GetRooms();
 
+        IList<User> GetUsers(string name);
+
         Room CreateRoom(string name);
+
+        User JoinRequest(string username, string roomname);
+
+        bool DisconnectUser(string username, string roomname);
     }
 }

@@ -60,6 +60,7 @@
     <Compile Include="DataModels\Room.cs" />
     <Compile Include="DataModels\User.cs" />
     <Compile Include="Interfaces\IRoomService.cs" />
+    <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setup\AutoMapper.cs" />
     <Compile Include="ViewModels\RoomViewModel.cs" />

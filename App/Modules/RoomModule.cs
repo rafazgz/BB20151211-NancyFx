@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using App.Models;
+using Common.DataModels;
 using Common.Interfaces;
 using Nancy;
 using Nancy.ModelBinding;
@@ -10,7 +13,8 @@ namespace App.Modules
     {
         protected IRoomService Service { get; private set; }
 
-        public RoomModule(IRoomService service) : base("/api/rooms")
+        public RoomModule(IRoomService service)
+            : base("/api/rooms")
         {
             Service = service;
 
@@ -28,6 +32,25 @@ namespace App.Modules
                 var room = Service.CreateRoom(model.Name);
 
                 return Negotiate.WithModel(room.ViewModel);
+            };
+
+            Get["/{room}/listUsers"] = p =>
+            {
+                string room = p.room;
+
+                var users = Service.GetUsers(room);
+
+                return Negotiate.WithModel(users.Select(user => user.ViewModel.Name));
+            };
+
+            Post["/{room}/join"] = p =>
+            {
+                string room = p.room;
+                var model = this.Bind<JoinRequest>();
+
+                var user = Service.JoinRequest(model.User, room);
+
+                return Negotiate.WithModel(user.ViewModel);
             };
         }
     }

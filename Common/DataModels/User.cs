@@ -12,7 +12,7 @@ namespace Common.DataModels
         public string Name { get; set; }
         public UserViewModel ViewModel
         {
-            get { return Mapper.Map<UserViewModel>(this); } 
+            get { return Mapper.Map<UserViewModel>(this); }
         }
     }
 }

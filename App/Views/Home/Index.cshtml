@@ -6,22 +6,23 @@
     <link rel="stylesheet" type="text/css" href="/Assets/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/Assets/css/custom.css" />
     <script type="text/javascript" src="/Assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/Assets/js/jquery.signalr.min.js"></script>
     <script type="text/javascript" src="/Assets/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/Assets/js/angular.min.js"></script>
 </head>
 <body ng-app="app" ng-controller="GlobalController">
     <div class="row">
-        <div class="col-sm-3 margin-16">
+        <div class="col-sm-3">
             @*Log-in form*@
             <h4>Login:</h4>
             <form class="form-group" ng-submit="login(username)">
-                <input class="form-control" type="text" placeholder="Username" ng-model="username" />
-                <input class="form-control btn btn-primary" type="submit" value="Start!" />
+                <input class="form-control" type="text" placeholder="Username" ng-model="username"/>
+                <input class="form-control btn btn-primary" type="submit" value="Start!"/>
             </form>
 
             @*Rooms list*@
             <div ng-if="logged">
-                <hr />
+                <hr/>
                 <h3>Logged as '{{loggedUser}}'</h3>
 
                 <h4>Create a chat room:</h4>
@@ -35,14 +36,39 @@
 
                 <div class="list-group">
                     <div ng-repeat="room in rooms">
-                        <a href="#" class="list-group-item">
+                        <div class="list-group-item" ng-click="joinRoom(room.name)">
                             <h4>{{room.name}}</h4>
                             <p>Users: {{room.users.length}}</p>
-                        </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div ng-if="chatting">
+            <div class="col-sm-6">
+                <h3>{{roomname}}</h3>
+                <form ng-submit="sendMessage(message); message = null">
+                    <input class="form-control" type="text" placeholder="message" ng-model="message"/>
+                    <input type="submit" style="display: none"/>
+                </form>
+                <ul style="list-style: none">
+                    <li ng-repeat="msg in messages | reverse">
+                        {{msg.user}}: {{msg.message}}
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-sm-3">
+                <h3>Users:</h3>
+                <ul style="list-style: none;">
+                    <li ng-repeat="user in users | reverse">
+                        {{user}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
     </div>
     <script type="text/javascript" src="/Assets/js/app.js"></script>
 </body>
