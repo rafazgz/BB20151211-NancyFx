@@ -21,6 +21,15 @@
                 $scope.$applyAsync(function () {
                     $scope.messages.push({ user: user, message: message });
                 });
+            },
+
+            disconnectUser: function(user) {
+                $scope.$applyAsync(function() {
+                    var index = $scope.users.indexOf(user);
+                    if (index > -1) {
+                        $scope.users.splice(index, 1);
+                    }
+                });
             }
         });
 
@@ -40,13 +49,19 @@
 
         $scope.createRoom = function (roomname) {
             httpService.createRoom(roomname).then(function (data) {
-                $scope.rooms.push(data);
+                $scope.rooms.push(data.data);
             });
         };
 
         $scope.joinRoom = function (roomname) {
+            if ($scope.chatting) {
+                $scope.hub.invoke('disconnect');
+                setTimeout(function() {}, 1000);
+            }
             httpService.getUsersInARoom(roomname).then(function (data) {
                 $scope.users = data.data;
+
+                $scope.messages = [];
 
                 $scope.hub.invoke('join', $scope.loggedUser, roomname);
 
@@ -151,6 +166,10 @@
 
             hub.on('addMessage', function (user, message) {
                 _this.events.addMessage(user, message);
+            });
+
+            hub.on('disconnectUser', function (user) {
+                _this.events.disconnectUser(user);
             });
 
             connection.start();

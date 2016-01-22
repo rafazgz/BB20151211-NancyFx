@@ -51,6 +51,25 @@ namespace Core.Services
             return user;
         }
 
+        public bool DisconnectUser(string username, string roomname)
+        {
+            var room = GetRoomByName(roomname);
+
+            var user = GetUserByName(username);
+
+            if (room == null || user == null)
+            {
+                return false;
+            }
+
+            room.Users.Remove(user);
+
+            _context.Entry(room);
+            _context.SaveChanges();
+
+            return true;
+        }
+
         public IList<User> GetUsers(string name)
         {
             var room = GetRoomByName(name);

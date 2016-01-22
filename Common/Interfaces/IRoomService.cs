@@ -12,5 +12,7 @@ namespace Common.Interfaces
         Room CreateRoom(string name);
 
         User JoinRequest(string username, string roomname);
+
+        bool DisconnectUser(string username, string roomname);
     }
 }
