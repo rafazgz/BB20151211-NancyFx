@@ -8,7 +8,7 @@ namespace App.Modules
 {
     public class RoomModule : NancyModule
     {
-        protected IRoomService Service { get; }
+        protected IRoomService Service { get; private set; }
 
         public RoomModule(IRoomService service) : base("/api/rooms")
         {
