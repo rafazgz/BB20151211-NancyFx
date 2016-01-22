@@ -8,6 +8,7 @@ namespace App
         public void Configuration(IAppBuilder app)
         {
             Common.Setup.AutoMapper.Initialize();
+            app.MapSignalR();
             app.UseNancy();
             app.UseStageMarker(PipelineStage.MapHandler);
         }    
