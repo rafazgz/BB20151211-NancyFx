@@ -14,6 +14,7 @@ namespace App.Bootstrapper
             base.ConfigureApplicationContainer(container);
 
             container.Register(typeof(IRoomService), (c, o) => new RoomService());
+            container.Register(typeof(IUserService), (c, o) => new UserService());
         }
 
         protected override void ConfigureConventions(NancyConventions nancyConventions)

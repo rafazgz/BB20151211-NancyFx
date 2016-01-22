@@ -9,10 +9,10 @@
         $scope.rooms = [];
         $scope.users = [];
         $scope.messages = [];
-        $scope.messages.push({ user: 'Test', message: 'Lorem ...' });
+
         var signalR = new SignalRFactory({
             addUser: function (user) {
-                $scope.$applyAsync(function() {
+                $scope.$applyAsync(function () {
                     $scope.users.push(user);
                 });
             },
@@ -27,8 +27,10 @@
         $scope.login = function (username) {
             $scope.loggedUser = username;
 
-            httpService.getAllRooms().success(function (data) {
-                $scope.rooms = data;
+            httpService.login(username);
+
+            httpService.getAllRooms().then(function (data) {
+                $scope.rooms = data.data;
 
                 $scope.hub = signalR.getConnection();
 
@@ -37,24 +39,34 @@
         };
 
         $scope.createRoom = function (roomname) {
-            httpService.createRoom(roomname).success(function (data) {
+            httpService.createRoom(roomname).then(function (data) {
                 $scope.rooms.push(data);
             });
         };
 
         $scope.joinRoom = function (roomname) {
-            $scope.hub.invoke('join', $scope.loggedUser, roomname);
-            $scope.roomname = roomname;
-            $scope.users.push($scope.loggedUser);
+            httpService.getUsersInARoom(roomname).then(function (data) {
+                $scope.users = data.data;
+
+                $scope.hub.invoke('join', $scope.loggedUser, roomname);
+
+                $scope.roomname = roomname;
+
+                $scope.users.push($scope.loggedUser);
+
+                httpService.joinRoom($scope.loggedUser, roomname);
+
+                $scope.chatting = true;
+            });
+
         }
 
         $scope.sendMessage = function (message) {
-            console.log(message);
             $scope.hub.invoke('send', message);
         }
     });
 
-    app.service('httpService', function ($http) {
+    app.service('httpService', function ($http, $q) {
         function getAllRooms() {
             return $http({
                 method: 'GET',
@@ -73,9 +85,52 @@
             });
         }
 
+        function getUsersInARoom(roomname) {
+            var deferred = $q.defer();
+
+            $http({
+                method: 'GET',
+                url: '/api/rooms/' + roomname + '/listUsers',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(function (data) {
+                deferred.resolve(data);
+            }, function (data) {
+                deferred.reject(data);
+            });
+
+            return deferred.promise;
+        }
+
+        function login(username) {
+            return $http({
+                method: 'POST',
+                url: '/api/users/login',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: { name: username }
+            });
+        }
+
+        function joinRoom(username, roomname) {
+            return $http({
+                method: 'POST',
+                url: '/api/rooms/' + roomname + '/join',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: { user: username }
+            });
+        }
+
         return {
             getAllRooms: getAllRooms,
-            createRoom: createRoom
+            createRoom: createRoom,
+            login: login,
+            joinRoom: joinRoom,
+            getUsersInARoom: getUsersInARoom
         };
     });
 
@@ -99,15 +154,15 @@
             });
 
             connection.start();
-                
+
             return hub;
         }
 
         return SignalRFactory;
     });
 
-    app.filter('reverse', function() {
-        return function(items) {
+    app.filter('reverse', function () {
+        return function (items) {
             return items.slice().reverse();
         }
     });

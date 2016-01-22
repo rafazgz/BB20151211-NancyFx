@@ -9,6 +9,7 @@ namespace App.Hubs
     public class ChatRoomHub : Hub
     {
         private static readonly Dictionary<string, User> Users = new Dictionary<string, User>();
+
         public Task Join(string username, string room)
         {
             var user = new User{Name = username, Room = room};
