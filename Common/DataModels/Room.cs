@@ -24,7 +24,7 @@ namespace Common.DataModels
             set
             {
                 _name = value;
-                RawName = value?.ToLower();
+                RawName = value == null ? null : value.ToLower();
             }
         }
         
@@ -38,6 +38,9 @@ namespace Common.DataModels
             Users = new List<User>();
         }
 
-        public RoomViewModel ViewModel => Mapper.Map<RoomViewModel>(this);
+        public RoomViewModel ViewModel
+        {
+            get { return Mapper.Map<RoomViewModel>(this); }
+        }
     }
 }
