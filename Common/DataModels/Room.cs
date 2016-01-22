@@ -14,20 +14,18 @@ namespace Common.DataModels
         public long Id { get; set; }
 
         private string _name;
+
         [StringLength(128)]
         public string Name
         {
-            get
-            {
-                return _name;
-            }
+            get { return _name; }
             set
             {
                 _name = value;
-                RawName = value?.ToLower();
+                RawName = value == null ? null : value.ToLower();
             }
         }
-        
+
         [StringLength(128), Index(IsUnique = true)]
         public string RawName { get; private set; }
 
@@ -38,6 +36,9 @@ namespace Common.DataModels
             Users = new List<User>();
         }
 
-        public RoomViewModel ViewModel => Mapper.Map<RoomViewModel>(this);
+        public RoomViewModel ViewModel
+        {
+            get { return Mapper.Map<RoomViewModel>(this); }
+        }
     }
 }
